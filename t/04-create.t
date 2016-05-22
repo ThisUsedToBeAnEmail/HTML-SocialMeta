@@ -34,7 +34,7 @@ my $test_create_all = '<meta name="twitter:card" content="summary"/>
 <meta property="og:url" content="www.someurl.com"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
 <meta property="og:site_name" content="Example Site, anything"/>
-<meta property="fb:app:id" content="1232342342354"/>';
+<meta property="fb:app_id" content="1232342342354"/>';
 
 is($tags, $test_create_all);
 
@@ -73,7 +73,7 @@ my $test_featured_all = '<meta name="twitter:card" content="summary_large_image"
 <meta property="og:url" content="www.someurl.com"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
 <meta property="og:site_name" content="Example Site, anything"/>
-<meta property="fb:app:id" content="1232342342354"/>';
+<meta property="fb:app_id" content="1232342342354"/>';
 
 is($create_featured, $test_featured_all);
 
@@ -97,7 +97,7 @@ my $test_player_card = '<meta name="twitter:card" content="player"/>
 <meta property="og:video:secure_url" content="www.somevideourl.com/url/url"/>
 <meta property="og:video:width" content="500"/>
 <meta property="og:video:height" content="500"/>
-<meta property="fb:app:id" content="1232342342354"/>';
+<meta property="fb:app_id" content="1232342342354"/>';
 
 
 is($create_player, $test_player_card);
@@ -131,7 +131,7 @@ my $android_test_tags = q(<meta name="twitter:card" content="app"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
 <meta property="og:description" content="Description goes here may have to do a little validation"/>
 <meta property="og:url" content="app.app.com/app"/>
-<meta property="fb:app:id" content="1232342342354"/>);
+<meta property="fb:app_id" content="1232342342354"/>);
 
 is($android_app_tags->create('app'), $android_test_tags);
 
@@ -168,7 +168,7 @@ my $ios_test_tags = q(<meta name="twitter:card" content="app"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
 <meta property="og:description" content="Description goes here may have to do a little validation"/>
 <meta property="og:url" content="app.app.com/app"/>
-<meta property="fb:app:id" content="1232342342354"/>);
+<meta property="fb:app_id" content="1232342342354"/>);
 
 is($ios_app_tags->create('app'), $ios_test_tags);
 

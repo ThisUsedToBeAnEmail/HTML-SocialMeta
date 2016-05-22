@@ -76,8 +76,9 @@ sub create_product {
 sub provider_convert {
     my ( $self, $field ) = @_;
 
-    if ( $field =~ m{^fb:}xms ) {
-        $field =~ s{^fb:}{}xms;
+    if ( $field =~ s{^fb:}{}xms ) {
+        $field =~ s{:}{_}xms;
+        
         return [ { field_type => $field, ignore_meta_namespace => 'fb' } ];
     }
 
