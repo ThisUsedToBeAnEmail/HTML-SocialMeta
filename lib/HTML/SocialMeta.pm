@@ -6,7 +6,7 @@ use List::MoreUtils qw(uniq);
 use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
 
-our $VERSION = '0.5';
+our $VERSION = '0.6';
 
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has [
@@ -114,7 +114,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.5
+Version 0.6
 
 =head1 SYNOPSIS
 
@@ -207,7 +207,7 @@ OPTIONAL - if you always want the same card type you can set it
 
 The Twitter @username the card should be attributed to. Required for Twitter Card analytics. 
 
-=item site name
+=item site_name
 
 This is Used by Facebook, you can just set it as your organisations name.
 
@@ -479,7 +479,7 @@ Robert Haliday <robh@cpan.org>
 
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2015 Robert Acock.
+Copyright 2016 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
