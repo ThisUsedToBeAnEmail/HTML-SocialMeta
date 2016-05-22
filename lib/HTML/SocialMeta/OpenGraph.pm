@@ -1,6 +1,5 @@
 package HTML::SocialMeta::OpenGraph;
-use Moose;
-use namespace::autoclean;
+use Moo;
 use Carp;
 
 our $VERSION = '0.6';
@@ -8,12 +7,10 @@ our $VERSION = '0.6';
 extends 'HTML::SocialMeta::Base';
 
 # Provider Specific Fields
-has 'meta_attribute' =>
-  ( isa => 'Str', is => 'ro', required => 1, default => 'property' );
-has 'meta_namespace' =>
-  ( isa => 'Str', is => 'ro', required => 1, default => 'og' );
+has 'meta_attribute' => ( is => 'ro', default => 'property' );
+has 'meta_namespace' => ( is => 'ro', default => 'og' );
 
-has 'fb_namespace' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'fb_namespace' => ( is => 'rw', lazy => 1, default => q{} );
 
 has '+card_options' => (
     default => sub {

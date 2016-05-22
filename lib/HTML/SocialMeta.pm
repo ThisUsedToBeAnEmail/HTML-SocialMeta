@@ -1,6 +1,5 @@
 package HTML::SocialMeta;
-use Moose;
-use namespace::autoclean;
+use Moo;
 use List::MoreUtils qw(uniq);
 
 use HTML::SocialMeta::Twitter;
@@ -8,25 +7,22 @@ use HTML::SocialMeta::OpenGraph;
 
 our $VERSION = '0.6';
 
-has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'card_type' => ( is => 'rw', lazy => 1, default => q{} );
 has [
     qw(card site site_name title description image url creator operatingSystem app_country app_name app_id app_url player player_height player_width fb_app_id)
   ] => (
     is      => 'ro',
-    isa     => 'Str',
     lazy    => 1,
     default => q{},
   );
 
 has 'twitter' => (
-    isa     => 'HTML::SocialMeta::Twitter',
     is      => 'ro',
     lazy    => 1,
     builder => 'build_twitter',
 );
 
 has 'opengraph' => (
-    isa     => 'HTML::SocialMeta::OpenGraph',
     is      => 'ro',
     lazy    => 1,
     builder => 'build_opengraph',
@@ -438,8 +434,7 @@ Add support for additional card types
 
 =head1 DEPENDENCIES
 
-Moose - Version 2.0604
-Namespace::Autoclean - Verstion 0.15
+Moo - Version 1.001000, 
 List::MoreUtils - Version 0.413 
 
 =head1 DIAGNOSTICS

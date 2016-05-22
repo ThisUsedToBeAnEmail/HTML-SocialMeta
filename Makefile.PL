@@ -19,8 +19,7 @@ WriteMakefile(
         'Test::Exception' => 0
     },
     PREREQ_PM => {
-        'Moose' => 2.0604,
-        'namespace::autoclean' => 0.15,
+        'Moo' => 1.001001,
     	'List::MoreUtils' => 0.413
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

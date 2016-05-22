@@ -1,12 +1,10 @@
 package HTML::SocialMeta::Base;
-use Moose;
-use namespace::autoclean;
+use Moo;
 use Carp;
 our $VERSION = '0.6';
 
 # A list of fields which the cards may possibly use
 has [qw(card_type card type name url)] => (
-    isa     => 'Str',
     is      => 'rw',
     lazy    => 1,
     default => q{},
@@ -16,7 +14,6 @@ has [
     qw(site fb_app_id site_name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width)
   ] => (
     is      => 'ro',
-    isa     => 'Str',
     lazy    => 1,
     default => q{},
   );
@@ -24,7 +21,6 @@ has [
 # default should be overridden by sub-classes
 has [qw(card_options build_fields)] => (
     is      => 'ro',
-    isa     => 'HashRef',
     default => sub { {} },
 );
 
@@ -236,8 +232,7 @@ Most probably. Please report any bugs at http://rt.cpan.org/.
 
 =head1 DEPENDENCIES
 
-Moose - Version 2.0604
-Namespace::Autoclean - Verstion 0.15
+Moo 
 List::MoreUtils - Version 0.413 
 
 =head1 CONFIGURATION AND ENVIRONMENT

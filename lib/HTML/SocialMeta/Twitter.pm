@@ -1,7 +1,6 @@
 package HTML::SocialMeta::Twitter;
 
-use Moose;
-use namespace::autoclean;
+use Moo;
 use Carp;
 
 extends 'HTML::SocialMeta::Base';
@@ -9,10 +8,8 @@ extends 'HTML::SocialMeta::Base';
 our $VERSION = '0.6';
 
 # Provider Specific Fields
-has 'meta_attribute' =>
-  ( isa => 'Str', is => 'ro', required => 1, default => 'name' );
-has 'meta_namespace' =>
-  ( isa => 'Str', is => 'ro', required => 1, default => 'twitter' );
+has 'meta_attribute' => ( is => 'ro', default => 'name' );
+has 'meta_namespace' => ( is => 'ro', default => 'twitter' );
 
 has '+card_options' => (
     default => sub {

@@ -315,8 +315,7 @@ Add support for additional card types
 
 # DEPENDENCIES
 
-Moose - Version 2.0604
-Namespace::Autoclean - Verstion 0.15
+Moo - Version 1.001000, 
 List::MoreUtils - Version 0.413 
 
 # DIAGNOSTICS

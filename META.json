@@ -3,7 +3,7 @@
    "author" : [
       "Robert Acock <ThisUsedToBeAnEmail@gmail.com>"
    ],
-   "dynamic_config" : 1,
+   "dynamic_config" : 0,
    "generated_by" : "ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.150005",
    "license" : [
       "artistic_2"
@@ -34,13 +34,12 @@
       "runtime" : {
          "requires" : {
             "List::MoreUtils" : "0.413",
-            "Moose" : "2.0604",
-            "namespace::autoclean" : "0.15",
+            "Moo" : "1.001001",
             "perl" : "5.006"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "0.5",
-   "x_serialization_backend" : "JSON::PP version 2.27203"
+   "version" : "0.6",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
 }
