@@ -72,10 +72,16 @@ sub _generate_meta_tag {
 }
 
 sub _build_field {
+    my $content = $_[0]->{ $_[1]->{field} };
+    $content =~ s/&/&amp;/g;
+    $content =~ s/"/&quot;/g;
+    $content =~ s/'/&apos;/g;
+    $content =~ s/</&lt;/g;
+    $content =~ s/>/&gt;/g;
     return sprintf q{<meta %s="%s:%s" content="%s"/>}, $_[0]->meta_attribute,
       ( $_[1]->{ignore_meta_namespace} // $_[0]->meta_namespace ),
       ( defined $_[1]->{field_type} ? $_[1]->{field_type} : $_[1]->{field} ),
-      $_[0]->{ $_[1]->{field} };
+      $content;
 }
 
 sub _convert_field {
