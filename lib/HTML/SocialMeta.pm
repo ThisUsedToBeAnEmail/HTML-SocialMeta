@@ -409,7 +409,7 @@ List::MoreUtils - Version 0.413
 
 A. Twitter Validation Tool
 
-L<https://dev.twitter.com/docs/cards/validation/validator>
+L<https://cards-dev.twitter.com/validator>
 
 Before your cards show on Twitter, you must first have your domain approved. Fortunately, 
 it's a super-easy process. After you implement your cards, simply enter your sample URL into 
@@ -425,7 +425,7 @@ tags and can also analyze your Twitter tags.
 
 C. Google Structured Data Testing Tool
 
-L<http://www.google.com/webmasters/tools/richsnippets>
+L<https://search.google.com/structured-data/testing-tool>
 
 Webmasters traditionally use the structured data testing tool to test authorship markup and preview
 how snippets will appear in search results, but you can also use see what other types of
