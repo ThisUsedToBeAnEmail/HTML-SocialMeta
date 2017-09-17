@@ -11,7 +11,7 @@ use Types::Standard qw/Str HashRef/;
 attributes(
     [qw(card_type card type name url)] => [ rw, Str, {lzy} ],
     [qw(site fb_app_id site_name title description image creator operatingSystem app_country
-    app_name app_id app_url player player_height player_width)] => [ Str, {lzy} ],
+    app_name app_id app_url player player_height player_width image_alt)] => [ Str, {lzy} ],
     [qw(card_options build_fields)] => [HashRef,{default => sub { {} }}],
     [qw(meta_attribute meta_namespace)] => [ro],
 );
@@ -63,8 +63,8 @@ sub _validate_field_value {
 
 sub _generate_meta_tag {
 
-    # fields that don't start with app or player generate a single tag
-    $_[1] !~ m{^app|player|fb}xms
+    # fields that don't start with app, player, or image generate a single tag
+    $_[1] !~ m{^app|player|fb|image}xms
       and return $_[0]->_build_field( { field => $_[1] } );
     return
       map { $_[0]->_build_field( { field => $_[1], %{$_} } ) }
@@ -119,19 +119,20 @@ Version 0.71
 =head1 SYNOPSIS
 
     use HTML::SocialMeta;
-    # summary or featured image 
+    # summary or featured image
     my $social = HTML::SocialMeta->new(
         site => '',
         site_name => '',
         title => '',
         description => '',
         image   => '',
+        image_alt => '',
         url  => '',  # optional
         ... => '',
         ... => '',
     );
 
-    # returns meta tags for all providers   
+    # returns meta tags for all providers
     # 'summary', 'featured_image', 'app', 'player'
     my $meta_tags = $social->create('summary');
 

@@ -28,13 +28,13 @@ attributes(
         sub {
             return {
                 thumbnail =>
-                  [qw(type title description url image site_name fb_app_id)],
+                  [qw(type title description url image image_alt site_name fb_app_id)],
                 article =>
-                  [qw(type title description url image site_name fb_app_id)],
+                  [qw(type title description url image image_alt site_name fb_app_id)],
                 video => [
-                    qw(type site_name url title image description player player_width player_height fb_app_id)
+                    qw(type site_name url title image image_alt description player player_width player_height fb_app_id)
                 ],
-                product => [qw(type title image description url fb_app_id)]
+                product => [qw(type title image image_alt description url fb_app_id)]
             };
         }
     ],

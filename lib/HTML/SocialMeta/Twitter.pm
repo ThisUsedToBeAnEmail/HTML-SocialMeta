@@ -27,13 +27,13 @@ attributes(
     '+build_fields' => [
         sub {
             {
-                summary             => [qw(card site title description image)],
-                summary_large_image => [qw(card site title description image)],
+                summary             => [qw(card site title description image image_alt)],
+                summary_large_image => [qw(card site title description image image_alt)],
                 app                 => [
                     qw(card site description app_country app_name app_id app_url)
                 ],
                 player => [
-                    qw(card site title description image player player_width player_height)
+                    qw(card site title description image image_alt player player_width player_height)
                 ],
             };
         }

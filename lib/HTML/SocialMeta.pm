@@ -12,7 +12,7 @@ use Types::Standard qw/Str Object ArrayRef/;
 our $VERSION = '0.71';
 
 attributes(
-    [qw(card_type card site site_name title description image url creator operatingSystem 
+    [qw(card_type card site site_name title description image image_alt url creator operatingSystem
     app_country app_name app_id app_url player player_height player_width fb_app_id)] => [ Str, {lzy} ],
     [qw(twitter opengraph)] => [ Object, { lzy, bld } ],
     social => [ sub { [qw/twitter opengraph/] } ],
@@ -41,7 +41,7 @@ sub _build_twitter {
     HTML::SocialMeta::Twitter->new(
         (
             map { defined $_[0]->$_ ? ( $_ => $_[0]->$_ ) : () }
-              qw/card_type site title description image url creator
+              qw/card_type site title description image image_alt url creator
               operatingSystem app_country app_name app_id app_url
               player player_width player_height/
         )
@@ -53,7 +53,7 @@ sub _build_opengraph {
         (
             map { defined $_[0]->$_ ? ( $_ => $_[0]->$_ ) : () }
               qw/card_type site_name title description image operatingSystem player
-              player_width player_height fb_app_id/
+              image_alt player_width player_height fb_app_id/
         ),
         (
             $_[0]->app_url || $_[0]->url
@@ -187,9 +187,13 @@ A description of the content in a maximum of 200 characters
 
 A URL to a unique image representing the content of the page
 
+=item image_alt
+
+A text description of the image, for use by vision-impaired users
+
 =item url
 
-OPTIONAL OPENGRAPH - allows you to specify an alternative url link you want the reader to be redirected 
+OPTIONAL OPENGRAPH - allows you to specify an alternative url link you want the reader to be redirected
 
 =item player
 
@@ -291,6 +295,7 @@ Fields Required:
     * creator - Twitter
     * title
     * image
+    * image_alt
     * url - Open Graph
 
 =cut
@@ -314,30 +319,31 @@ The Player Card allows you to share Video clips and audio stream.
 
 Returns an instance for the player card:
 
-    $card->create('player');	
+    $card->create('player');
     # call meta provider specifically
     $card->twitter->create_player;
     $card->opengraph->create_video;
 
 Fields Required:
- 
-    * site 
-    * title 
-    * description 
-    * image 
-    * player                
-    * player_width           
-    * player_height     
+
+    * site
+    * title
+    * description
+    * image
+    * image_alt
+    * player
+    * player_width
+    * player_height
 
 image to be displayed in place of the player on platforms that does not support iframes or inline players. You should make this image the same dimensions
-as your player. Images with fewer than 68,600 pixels (a 262 x 262 square image, or a 350 x 196 16:9 image) will cause the player card not to render. 
-Image must be less than 1MB in size 
+as your player. Images with fewer than 68,600 pixels (a 262 x 262 square image, or a 350 x 196 16:9 image) will cause the player card not to render.
+Image must be less than 1MB in size
 
 =cut
 
 =head2 App Card
 
-The App Card is a great way to represent mobile applications on Social Media Platforms and to drive installs. 
+The App Card is a great way to represent mobile applications on Social Media Platforms and to drive installs.
 
     ,-----------------------------------,
     |   APP NAME              *-------* |
