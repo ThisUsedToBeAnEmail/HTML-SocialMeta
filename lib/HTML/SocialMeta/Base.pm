@@ -11,7 +11,8 @@ use Types::Standard qw/Str HashRef/;
 attributes(
     [qw(card_type card type name url)] => [ rw, Str, {lzy} ],
     [qw(site fb_app_id site_name title description image creator operatingSystem app_country
-    app_name app_id app_url player player_height player_width image_alt)] => [ Str, {lzy} ],
+    app_name app_id app_url player player_height player_width)] => [ Str, {lzy} ],
+    [qw(image_alt)] => [ Str, {lzy => 1, default => ''} ],
     [qw(card_options build_fields)] => [HashRef,{default => sub { {} }}],
     [qw(meta_attribute meta_namespace)] => [ro],
 );
