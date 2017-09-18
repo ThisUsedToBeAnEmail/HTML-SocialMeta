@@ -5,93 +5,61 @@ use List::MoreUtils qw(uniq);
 use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
 
-our $VERSION = '0.6';
+use MooX::LazierAttributes qw/lzy bld/;
+use MooX::ValidateSubs;
+use Types::Standard qw/Str Object ArrayRef/;
 
-has 'card_type' => ( is => 'rw', lazy => 1, default => q{} );
-has [
-    qw(card site site_name title description image url creator operatingSystem app_country app_name app_id app_url player player_height player_width fb_app_id)
-  ] => (
-    is      => 'ro',
-    lazy    => 1,
-    default => q{},
-  );
+our $VERSION = '0.71';
 
-has 'twitter' => (
-    is      => 'ro',
-    lazy    => 1,
-    builder => 'build_twitter',
+attributes(
+    [qw(card_type card site site_name title description image url creator operatingSystem 
+    app_country app_name app_id app_url player player_height player_width fb_app_id)] => [ Str, {lzy} ],
+    [qw(twitter opengraph)] => [ Object, { lzy, bld } ],
+    social => [ sub { [qw/twitter opengraph/] } ],
 );
 
-has 'opengraph' => (
-    is      => 'ro',
-    lazy    => 1,
-    builder => 'build_opengraph',
+validate_subs(
+    create => {
+        params => [ [ Str, 'card_type' ], [ ArrayRef, 'social' ] ],
+    },
+    required_fields => {
+        params => [ [ Str, 'card_type' ], [ ArrayRef, 'social' ] ],
+    },
 );
 
 sub create {
-    my ( $self, $card_type ) = @_;
-
-    $card_type ||= $self->card_type;
-
-    $self->card_type($card_type);
-
-    my @meta_tags =
-      map { $self->$_->create( $self->card_type ) } qw/twitter opengraph/;
-
-    return join "\n", @meta_tags;
+    return join "\n", map { $_[0]->$_->create( $_[1] ) } @{ $_[2] };
 }
 
 sub required_fields {
-    my ( $self, $card_type ) = @_;
-
-    my @meta_tags =
-      map { $self->$_->required_fields( $self->$_->meta_option($card_type) ) }
-      qw/twitter opengraph/;
-
-    my @required_fields = uniq(@meta_tags);
-
-    return @required_fields;
+    return uniq(
+        map { $_[0]->$_->required_fields( $_[0]->$_->meta_option( $_[1] ) ) }
+          @{ $_[2] } );
 }
 
-sub build_twitter {
-    my $self = shift;
-
-    return HTML::SocialMeta::Twitter->new(
-        card_type       => $self->card_type,
-        site            => $self->site,
-        title           => $self->title,
-        description     => $self->description,
-        image           => $self->image,
-        url             => $self->url,
-        creator         => $self->creator,
-        operatingSystem => $self->operatingSystem,
-        app_country     => $self->app_country,
-        app_name        => $self->app_name,
-        app_id          => $self->app_id,
-        app_url         => $self->app_url,
-        player          => $self->player,
-        player_width    => $self->player_width,
-        player_height   => $self->player_height,
+sub _build_twitter {
+    HTML::SocialMeta::Twitter->new(
+        (
+            map { defined $_[0]->$_ ? ( $_ => $_[0]->$_ ) : () }
+              qw/card_type site title description image url creator
+              operatingSystem app_country app_name app_id app_url
+              player player_width player_height/
+        )
     );
 }
 
-sub build_opengraph {
-    my $self = shift;
-
-    my $url = $self->app_url ? $self->app_url : $self->url;
-
-    return HTML::SocialMeta::OpenGraph->new(
-        card_type       => $self->card_type,
-        site_name       => $self->site_name,
-        title           => $self->title,
-        description     => $self->description,
-        image           => $self->image,
-        url             => $url,
-        operatingSystem => $self->operatingSystem,
-        player          => $self->player,
-        player_width    => $self->player_width,
-        player_height   => $self->player_height,
-        fb_app_id       => $self->fb_app_id,
+sub _build_opengraph {
+    HTML::SocialMeta::OpenGraph->new(
+        (
+            map { defined $_[0]->$_ ? ( $_ => $_[0]->$_ ) : () }
+              qw/card_type site_name title description image operatingSystem player
+              player_width player_height fb_app_id/
+        ),
+        (
+            $_[0]->app_url || $_[0]->url
+            ? ( url => $_[0]->app_url ? $_[0]->app_url : $_[0]->url )
+            : ()
+        ),
     );
 }
 
@@ -110,7 +78,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.6
+Version 0.71
 
 =head1 SYNOPSIS
 
@@ -123,7 +91,7 @@ Version 0.6
         description => '',
         image	=> '',
         fb_app_id => '',
-	url  => '',  # optional
+	    url  => '',  # optional
         ... => '',
         ... => '',
     );
@@ -474,7 +442,7 @@ Robert Haliday <robh@cpan.org>
 
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2016 Robert Acock.
+Copyright 2017 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a

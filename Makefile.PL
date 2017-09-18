@@ -20,7 +20,10 @@ WriteMakefile(
     },
     PREREQ_PM => {
         'Moo' => 1.001001,
-    	'List::MoreUtils' => 0.413
+    	'List::MoreUtils' => 0.413,
+        'MooX::LazierAttributes' => 0.14,
+        'MooX::ValidateSubs' => 0.09,
+        'Type::Tiny' => '1.000006',
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'HTML-SocialMeta-*' },

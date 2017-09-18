@@ -1,133 +1,92 @@
 package HTML::SocialMeta::Base;
 use Moo;
 use Carp;
-our $VERSION = '0.6';
 
-# A list of fields which the cards may possibly use
-has [qw(card_type card type name url)] => (
-    is      => 'rw',
-    lazy    => 1,
-    default => q{},
+our $VERSION = '0.71';
+
+use MooX::LazierAttributes qw/rw ro lzy/;
+use MooX::ValidateSubs;
+use Types::Standard qw/Str HashRef/;
+
+attributes(
+    [qw(card_type card type name url)] => [ rw, Str, {lzy} ],
+    [qw(site fb_app_id site_name title description image creator operatingSystem app_country
+    app_name app_id app_url player player_height player_width)] => [ Str, {lzy} ],
+    [qw(card_options build_fields)] => [HashRef,{default => sub { {} }}],
+    [qw(meta_attribute meta_namespace)] => [ro],
 );
 
-has [
-    qw(site fb_app_id site_name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width)
-  ] => (
-    is      => 'ro',
-    lazy    => 1,
-    default => q{},
-  );
-
-# default should be overridden by sub-classes
-has [qw(card_options build_fields)] => (
-    is      => 'ro',
-    default => sub { {} },
+validate_subs(
+    create => { params => [ [ Str, 'card_type' ] ] },
+    build_meta_tags    => { params => [ [Str] ] },
+    required_fields    => { params => [ [Str] ] },
+    meta_option        => { params => [ [Str] ] },
+    _generate_meta_tag => { params => [ [Str] ] },
+    _build_field       => { params => [ [HashRef] ] },
+    _convert_field     => { params => [ [Str] ] },
+    _no_card_type      => { params => [ [Str] ] }
 );
 
 sub create {
-    my ( $self, $card_type ) = @_;
-
-    $card_type ||= $self->card_type;
-
-    if ( my $option = $self->card_options->{$card_type} ) {
-
-        return $self->$option;
+    if ( my $option = $_[0]->card_options->{ $_[1] } ) {
+        return $_[0]->$option;
     }
-
-    return $self->_no_card_type($card_type);
+    return $_[0]->_no_card_type( $_[1] );
 }
 
 sub build_meta_tags {
-    my ( $self, $field_type ) = @_;
-
     my @meta_tags;
-
-    if ( $self->meta_attribute eq q{itemprop} ) {
-        push @meta_tags, $self->item_type;
+    $_[0]->meta_attribute eq q{itemprop} and push @meta_tags, $_[0]->item_type;
+    foreach ( $_[0]->required_fields( $_[1] ) ) {
+        $_[0]->_validate_field_value($_);
+        push @meta_tags, $_[0]->_generate_meta_tag($_);
     }
-
-    foreach my $field ( $self->required_fields($field_type) ) {
-
-        # check the field has a value set
-        $self->_validate_field_value($field);
-
-        push @meta_tags, $self->_generate_meta_tag($field);
-    }
-
     return join "\n", @meta_tags;
 }
 
 sub required_fields {
-    my ( $self, $field ) = @_;
-
     return
-      exists $self->build_fields->{$field}
-      ? @{ $self->build_fields->{$field} }
+      defined $_[0]->build_fields->{ $_[1] }
+      ? @{ $_[0]->build_fields->{ $_[1] } }
       : ();
 }
 
+sub meta_option {
+    ( my $option = $_[0]->card_options->{ $_[1] } ) =~ s{^create_}{}xms;
+    return $option;
+}
+
 sub _validate_field_value {
-    my ( $self, $field ) = @_;
-
-    # look to see we have the fields attribute set
-    croak q{you have not set this field value } . $field
-      if !$self->$field;
-
-    return;
+    defined $_[0]->{ $_[1] } and return 1;
+    croak sprintf q{you have not set this field value %s}, $_[1];
 }
 
 sub _generate_meta_tag {
-    my ( $self, $field ) = @_;
 
     # fields that don't start with app or player generate a single tag
-    return $self->_build_field( { field => $field } )
-      if $field !~ m{(?:app|player|fb)}xms;
-
-    # fields that start with app or player generate multiple tags
-    my @tags = ();
-
-    for ( @{ $self->_convert_field($field) } ) {
-        push @tags, $self->_build_field( { field => $field, %{$_} } );
-    }
-
-    return @tags;
+    $_[1] !~ m{^app|player|fb}xms
+      and return $_[0]->_build_field( { field => $_[1] } );
+    return
+      map { $_[0]->_build_field( { field => $_[1], %{$_} } ) }
+      @{ $_[0]->_convert_field( $_[1] ) };
 }
 
 sub _build_field {
-    my ( $self, $args ) = @_;
-
-    my $field_type = $args->{field_type} || $args->{field};
-    my $meta_namespace =
-      $args->{ignore_meta_namespace} || $self->meta_namespace;
-    my $field = $args->{field};
-
-    return sprintf q{<meta %s="%s:%s" content="%s"/>},
-      $self->meta_attribute, $meta_namespace, $field_type, $self->$field;
+    return sprintf q{<meta %s="%s:%s" content="%s"/>}, $_[0]->meta_attribute,
+      ( $_[1]->{ignore_meta_namespace} // $_[0]->meta_namespace ),
+      ( defined $_[1]->{field_type} ? $_[1]->{field_type} : $_[1]->{field} ),
+      $_[0]->{ $_[1]->{field} };
 }
 
 sub _convert_field {
-    my ( $self, $field ) = @_;
-
-    $field =~ tr/_/:/;
-
-    return $self->provider_convert($field);
-}
-
-sub meta_option {
-    my ( $self, $card_type ) = @_;
-
-    if ( my $option = $self->card_options->{$card_type} ) {
-
-        # remove create_ and we have the card type
-        $option =~ s{^create_}{}xms;
-        return $option;
-    }
+    $_[1] =~ tr/_/:/;
+    return $_[0]->provider_convert( $_[1] );
 }
 
 sub _no_card_type {
-    my ( $self, $card_type ) = @_;
-    return croak
-q{this card type does not exist try one of these summary, featured_image, app, player};
+    return croak sprintf
+q{this card type does not exist - %s try one of these summary, featured_image, app, player},
+      $_[1];
 }
 
 #
@@ -153,7 +112,7 @@ builds and returns the Meta Tags
 
 =head1 VERSION
 
-Version 0.6
+Version 0.71
 
 =cut
 
@@ -241,7 +200,7 @@ List::MoreUtils - Version 0.413
 
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2015 Robert Acock.
+Copyright 2017 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a

@@ -5,84 +5,85 @@ use Carp;
 
 extends 'HTML::SocialMeta::Base';
 
-our $VERSION = '0.6';
+our $VERSION = '0.71';
 
-# Provider Specific Fields
-has 'meta_attribute' => ( is => 'ro', default => 'name' );
-has 'meta_namespace' => ( is => 'ro', default => 'twitter' );
+use MooX::LazierAttributes;
+use MooX::ValidateSubs;
+use Types::Standard qw/Str Object ArrayRef HashRef/;
 
-has '+card_options' => (
-    default => sub {
-        return {
-            summary        => q(create_summary),
-            featured_image => q(create_summary_large_image),
-            app            => q(create_app),
-            player         => q(create_player),
-        };
-    },
+attributes(
+    '+meta_attribute' => ['name'],
+    '+meta_namespace' => ['twitter'],
+    '+card_options'   => [
+        sub {
+            {
+                summary        => q(create_summary),
+                featured_image => q(create_summary_large_image),
+                app            => q(create_app),
+                player         => q(create_player),
+            };
+        }
+    ],
+    '+build_fields' => [
+        sub {
+            {
+                summary             => [qw(card site title description image)],
+                summary_large_image => [qw(card site title description image)],
+                app                 => [
+                    qw(card site description app_country app_name app_id app_url)
+                ],
+                player => [
+                    qw(card site title description image player player_width player_height)
+                ],
+            };
+        }
+    ],
 );
 
-has '+build_fields' => (
-    default => sub {
-        return {
-            summary             => [qw(card site title description image)],
-            summary_large_image => [qw(card site title description image)],
-            app =>
-              [qw(card site description app_country app_name app_id app_url)],
-            player => [
-                qw(card site title description image player player_width player_height)
-            ],
-        };
+validate_subs(
+    create_summary => {
+        params => [ [ Str, sub { 'summary' } ] ],
+    },
+    create_summary_large_image => {
+        params => [ [ Str, sub { 'summary_large_image' } ] ],
+    },
+    create_app => {
+        params => [ [ Str, sub { 'app' } ] ],
+    },
+    create_player => {
+        params => [ [ Str, sub { 'player' } ] ],
+    },
+    provider_convert => {
+        params => [ [Str] ],
     },
 );
 
 sub create_summary {
-    my ($self) = @_;
-
-    $self->card('summary');
-
-    return $self->build_meta_tags( $self->card );
+    return $_[0]->build_meta_tags( $_[0]->card( $_[1] ) );
 }
 
 sub create_summary_large_image {
-    my ($self) = @_;
-
-    $self->card('summary_large_image');
-
-    return $self->build_meta_tags( $self->card );
+    return $_[0]->build_meta_tags( $_[0]->card( $_[1] ) );
 }
 
 sub create_app {
-    my ($self) = @_;
-
-    $self->card('app');
-
-    return $self->build_meta_tags( $self->card );
+    return $_[0]->build_meta_tags( $_[0]->card( $_[1] ) );
 }
 
 sub create_player {
-    my ($self) = @_;
-
-    $self->card('player');
-
-    return $self->build_meta_tags( $self->card );
+    return $_[0]->build_meta_tags( $_[0]->card( $_[1] ) );
 }
 
 sub provider_convert {
-    my ( $self, $field ) = @_;
-
-    return [ { field_type => $field } ]
-      if $field !~ m{^app}xms || $field =~ m{country$}xms;
-
-    return [ { field_type => $field . ':googleplay' } ]
-      if $self->operatingSystem eq q{ANDROID};
-
-    return [
-        { field_type => $field . ':iphone' },
-        { field_type => $field . ':ipad' }
-      ]
-      if $self->operatingSystem eq q{IOS};
-
+    $_[1] !~ m{^app}xms || $_[1] =~ m&country$&xms
+      and return [ { field_type => $_[1] } ];
+    $_[0]->operatingSystem eq q#ANDROID#
+      and return [ { field_type => $_[1] . ':googleplay' } ];
+    $_[0]->operatingSystem eq q~IOS~
+      and return [
+        { field_type => $_[1] . ':iphone' },
+        { field_type => $_[1] . ':ipad' }
+      ];
     return croak 'We currently do not support this APP type';
 }
 
@@ -101,7 +102,7 @@ HTML::SocialMeta::Twitter
 
 =head1 VERSION
 
-Version 0.6
+Version 0.71
 
 =cut
 
@@ -206,7 +207,7 @@ Most probably. Please report any bugs at http://rt.cpan.org/.
  
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2015 Robert Acock.
+Copyright 2017 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a

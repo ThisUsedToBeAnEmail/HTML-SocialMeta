@@ -2,92 +2,89 @@ package HTML::SocialMeta::OpenGraph;
 use Moo;
 use Carp;
 
-our $VERSION = '0.6';
+our $VERSION = '0.71';
 
 extends 'HTML::SocialMeta::Base';
 
-# Provider Specific Fields
-has 'meta_attribute' => ( is => 'ro', default => 'property' );
-has 'meta_namespace' => ( is => 'ro', default => 'og' );
+use MooX::LazierAttributes qw/rw lzy/;
+use MooX::ValidateSubs;
+use Types::Standard qw/Str/;
 
-has 'fb_namespace' => ( is => 'rw', lazy => 1, default => q{} );
-
-has '+card_options' => (
-    default => sub {
-        return {
-            summary        => q(create_thumbnail),
-            featured_image => q(create_article),
-            player         => q(create_video),
-            app            => q(create_product),
-        };
-    },
+attributes(
+    '+meta_attribute' => ['property'],
+    '+meta_namespace' => ['og'],
+    fb_namespace      => [ rw, Str, {lzy} ],
+    '+card_options'   => [
+        sub {
+            {
+                summary        => q(create_thumbnail),
+                featured_image => q(create_article),
+                player         => q(create_video),
+                app            => q(create_product),
+            };
+        }
+    ],
+    '+build_fields' => [
+        sub {
+            return {
+                thumbnail =>
+                  [qw(type title description url image site_name fb_app_id)],
+                article =>
+                  [qw(type title description url image site_name fb_app_id)],
+                video => [
+                    qw(type site_name url title image description player player_width player_height fb_app_id)
+                ],
+                product => [qw(type title image description url fb_app_id)]
+            };
+        }
+    ],
 );
 
-has '+build_fields' => (
-    default => sub {
-        return {
-            thumbnail =>
-              [qw(type title description url image site_name fb_app_id)],
-            article =>
-              [qw(type title description url image site_name fb_app_id)],
-            video => [
-                qw(type site_name url title image description player player_width player_height fb_app_id)
-            ],
-            product => [qw(type title image description url fb_app_id)]
-        };
+validate_subs(
+    create_thumbnail => {
+        params => [ [ Str, sub { 'thumbnail' } ] ],
+    },
+    create_article => {
+        params => [ [ Str, sub { 'article' } ] ],
+    },
+    create_video => {
+        params => [ [ Str, sub { 'video' } ] ],
+    },
+    create_product => {
+        params => [ [ Str, sub { 'product' } ] ],
+    },
+    provider_convert => {
+        params => [ [Str] ],
     },
 );
 
 sub create_thumbnail {
-    my ($self) = @_;
-
-    $self->type('thumbnail');
-
-    return $self->build_meta_tags( $self->type );
+    return $_[0]->build_meta_tags( $_[0]->type( $_[1] ) );
 }
 
 sub create_article {
-    my ($self) = @_;
-
-    $self->type('article');
-
-    return $self->build_meta_tags( $self->type );
+    return $_[0]->build_meta_tags( $_[0]->type( $_[1] ) );
 }
 
 sub create_video {
-    my ($self) = @_;
-
-    $self->type('video');
-
-    return $self->build_meta_tags( $self->type );
+    return $_[0]->build_meta_tags( $_[0]->type( $_[1] ) );
 }
 
 sub create_product {
-    my ($self) = @_;
-
-    $self->type('product');
-
-    return $self->build_meta_tags( $self->type );
+    return $_[0]->build_meta_tags( $_[0]->type( $_[1] ) );
 }
 
 sub provider_convert {
-    my ( $self, $field ) = @_;
-
-    if ( $field =~ s{^fb:}{}xms ) {
-        $field =~ s{:}{_}xms;
-        
-        return [ { field_type => $field, ignore_meta_namespace => 'fb' } ];
+    if ( $_[1] =~ s{^fb:}{}xms ) {
+        $_[1] =~ s{:}{_}xms;
+        return [ { field_type => $_[1], ignore_meta_namespace => 'fb' } ];
     }
-
-    $field =~ s{^player}{video}xms;
-
-    return [
-        { field_type => $field . ':url' },
-        { field_type => $field . ':secure_url' }
-      ]
-      if $field =~ m{^video$}xms;
-
-    return [ { field_type => $field } ];
+    $_[1] =~ s{^player}{video}xms;
+    $_[1] =~ m{^video$}xms and return [
+        { field_type => $_[1] . ':url' },
+        { field_type => $_[1] . ':secure_url' }
+    ];
+    return [ { field_type => $_[1] } ];
 }
 
 #
@@ -105,7 +102,7 @@ HTML::SocialMeta::OpenGraph
 
 =head1 VERSION
 
-Version 0.6
+Version 0.71
 
 =cut
 
@@ -201,7 +198,7 @@ Most probably. Please report any bugs at http://rt.cpan.org/.
 
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2015 Robert Acock.
+Copyright 2017 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
