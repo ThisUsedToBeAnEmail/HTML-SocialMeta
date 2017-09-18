@@ -409,7 +409,7 @@ List::MoreUtils - Version 0.413
 
 A. Twitter Validation Tool
 
-https://dev.twitter.com/docs/cards/validation/validator
+L<https://cards-dev.twitter.com/validator>
 
 Before your cards show on Twitter, you must first have your domain approved. Fortunately, 
 it's a super-easy process. After you implement your cards, simply enter your sample URL into 
@@ -417,7 +417,7 @@ the validation tool. After checking your markup, select the "Submit for Approval
 
 B. Facebook Debugger
 
-https://developers.facebook.com/tools/debug
+L<https://developers.facebook.com/tools/debug>
 
 You do not need prior approval for your meta information to show on Facebook, 
 but the debugging tool they offer gives you a wealth of information about all your 
@@ -425,7 +425,7 @@ tags and can also analyze your Twitter tags.
 
 C. Google Structured Data Testing Tool
 
-http://www.google.com/webmasters/tools/richsnippets
+L<https://search.google.com/structured-data/testing-tool>
 
 Webmasters traditionally use the structured data testing tool to test authorship markup and preview
 how snippets will appear in search results, but you can also use see what other types of
