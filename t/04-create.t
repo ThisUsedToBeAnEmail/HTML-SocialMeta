@@ -11,7 +11,7 @@ my $meta_tags = HTML::SocialMeta->new(
     site => '@example_twitter',
     site_name => 'Example Site, anything',
     title => 'You can have any title you wish here',
-    description => 'Description goes here may have to do a little validation',
+    description => 'Description goes here may have to do a little "validation"',
     image => 'www.urltoimage.com/blah.jpg',
     image_alt => 'A picture of some stuff.',
     url	 => 'www.someurl.com',
@@ -27,12 +27,12 @@ my $tags = $meta_tags->create;
 my $test_create_all = '<meta name="twitter:card" content="summary"/>
 <meta name="twitter:site" content="@example_twitter"/>
 <meta name="twitter:title" content="You can have any title you wish here"/>
-<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+<meta name="twitter:description" content="Description goes here may have to do a little &quot;validation&quot;"/>
 <meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>
 <meta name="twitter:image:alt" content="A picture of some stuff."/>
 <meta property="og:type" content="thumbnail"/>
 <meta property="og:title" content="You can have any title you wish here"/>
-<meta property="og:description" content="Description goes here may have to do a little validation"/>
+<meta property="og:description" content="Description goes here may have to do a little &quot;validation&quot;"/>
 <meta property="og:url" content="www.someurl.com"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
 <meta property="og:image:alt" content="A picture of some stuff."/>
@@ -51,6 +51,7 @@ my $test_twitter_featured = '<meta name="twitter:card" content="summary_large_im
 <meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>
 <meta name="twitter:image:alt" content="A picture of some stuff."/>';
 
+
 is($twitter_create, $test_twitter_featured);
 
 # check we still have the original card_type passed in available
@@ -63,6 +64,7 @@ my $test_twitter = '<meta name="twitter:card" content="summary"/>
 <meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>
 <meta name="twitter:image:alt" content="A picture of some stuff."/>';
 
+
 is($generic_twitter_create, $test_twitter);
 
 my $create_featured = $meta_tags->create('featured_image');
@@ -70,12 +72,12 @@ my $create_featured = $meta_tags->create('featured_image');
 my $test_featured_all = '<meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@example_twitter"/>
 <meta name="twitter:title" content="You can have any title you wish here"/>
-<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+<meta name="twitter:description" content="Description goes here may have to do a little &quot;validation&quot;"/>
 <meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>
 <meta name="twitter:image:alt" content="A picture of some stuff."/>
 <meta property="og:type" content="article"/>
 <meta property="og:title" content="You can have any title you wish here"/>
-<meta property="og:description" content="Description goes here may have to do a little validation"/>
+<meta property="og:description" content="Description goes here may have to do a little &quot;validation&quot;"/>
 <meta property="og:url" content="www.someurl.com"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
 <meta property="og:image:alt" content="A picture of some stuff."/>
@@ -89,7 +91,7 @@ my $create_player = $meta_tags->create('player');
 my $test_player_card = '<meta name="twitter:card" content="player"/>
 <meta name="twitter:site" content="@example_twitter"/>
 <meta name="twitter:title" content="You can have any title you wish here"/>
-<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+<meta name="twitter:description" content="Description goes here may have to do a little &quot;validation&quot;"/>
 <meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>
 <meta name="twitter:image:alt" content="A picture of some stuff."/>
 <meta name="twitter:player" content="www.somevideourl.com/url/url"/>
