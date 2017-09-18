@@ -9,7 +9,7 @@ use MooX::LazierAttributes qw/lzy bld/;
 use MooX::ValidateSubs;
 use Types::Standard qw/Str Object ArrayRef/;
 
-our $VERSION = '0.71';
+our $VERSION = '0.72';
 
 attributes(
     [qw(card_type card site site_name title description image image_alt url creator operatingSystem
@@ -28,7 +28,7 @@ validate_subs(
 );
 
 sub create {
-    return join "\n", map { $_[0]->$_->create( $_[1] ) } @{ $_[2] };
+    return join "\n", map { $_[0]->$_->create( $_[1] ) } ref $_[2] eq 'ARRAY' ? @{ $_[2] } : $_[2];
 }
 
 sub required_fields {
@@ -78,7 +78,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.71
+Version 0.72
 
 =head1 SYNOPSIS
 

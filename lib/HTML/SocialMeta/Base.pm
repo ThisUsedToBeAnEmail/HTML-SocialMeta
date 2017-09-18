@@ -2,7 +2,7 @@ package HTML::SocialMeta::Base;
 use Moo;
 use Carp;
 
-our $VERSION = '0.71';
+our $VERSION = '0.72';
 
 use MooX::LazierAttributes qw/rw ro lzy/;
 use MooX::ValidateSubs;
@@ -15,6 +15,11 @@ attributes(
     [qw(image_alt)] => [ Str, {lzy => 1, default => ''} ],
     [qw(card_options build_fields)] => [HashRef,{default => sub { {} }}],
     [qw(meta_attribute meta_namespace)] => [ro],
+    [qw(encoding)] => [HashRef, {lzy, default => sub {
+        my %encode = ( q{&} => q{&amp;}, q{"} => q{&quot;}, q{'} => q{&apos;}, q{<} => q{&lt;}, q{>} => q{&gt;} );
+        $encode{regex} = join "|", keys %encode;
+        return \%encode;
+    }}]
 );
 
 validate_subs(
@@ -74,11 +79,8 @@ sub _generate_meta_tag {
 
 sub _build_field {
     my $content = $_[0]->{ $_[1]->{field} };
-    $content =~ s/&/&amp;/g;
-    $content =~ s/"/&quot;/g;
-    $content =~ s/'/&apos;/g;
-    $content =~ s/</&lt;/g;
-    $content =~ s/>/&gt;/g;
+    my $encode = $_[0]->encoding; # lazy build  once and not for each field
+    $content =~ s/($encode->{regex})/$encode->{$1}/g;
     return sprintf q{<meta %s="%s:%s" content="%s"/>}, $_[0]->meta_attribute,
       ( $_[1]->{ignore_meta_namespace} // $_[0]->meta_namespace ),
       ( defined $_[1]->{field_type} ? $_[1]->{field_type} : $_[1]->{field} ),
@@ -119,7 +121,7 @@ builds and returns the Meta Tags
 
 =head1 VERSION
 
-Version 0.71
+Version 0.72
 
 =cut
 
