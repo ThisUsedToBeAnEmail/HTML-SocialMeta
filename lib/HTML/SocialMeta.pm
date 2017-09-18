@@ -189,7 +189,7 @@ A URL to a unique image representing the content of the page
 
 =item image_alt
 
-A text description of the image, for use by vision-impaired users
+OPTIONAL - A text description of the image, for use by vision-impaired users
 
 =item url
 
@@ -295,8 +295,11 @@ Fields Required:
     * creator - Twitter
     * title
     * image
-    * image_alt
     * url - Open Graph
+
+Optional Fields:
+
+    * image_alt
 
 =cut
 
@@ -330,10 +333,13 @@ Fields Required:
     * title
     * description
     * image
-    * image_alt
     * player
     * player_width
     * player_height
+
+Optional Fields:
+
+    * image_alt
 
 image to be displayed in place of the player on platforms that does not support iframes or inline players. You should make this image the same dimensions
 as your player. Images with fewer than 68,600 pixels (a 262 x 262 square image, or a 350 x 196 16:9 image) will cause the player card not to render.
