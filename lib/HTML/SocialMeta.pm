@@ -447,6 +447,7 @@ meta data Google is able to extract from each page.
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 Robert Haliday <robh@cpan.org>
+Jason McIntosh (JMAC) <jmac@jmac.org>
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
