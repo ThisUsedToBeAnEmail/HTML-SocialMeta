@@ -11,15 +11,10 @@ use Types::Standard qw/Str HashRef/;
 attributes(
     [qw(card_type card type name url)] => [ rw, Str, {lzy} ],
     [qw(site fb_app_id site_name title description image creator operatingSystem app_country
-    app_name app_id app_url player player_height player_width)] => [ Str, {lzy} ],
-    [qw(image_alt)] => [ Str, {lzy => 1, default => ''} ],
+    app_name app_id app_url player player_height player_width)] => [Str],
+    [qw(image_alt)] => [ Str, {lzy} ],
     [qw(card_options build_fields)] => [HashRef,{default => sub { {} }}],
     [qw(meta_attribute meta_namespace)] => [ro],
-    [qw(encoding)] => [HashRef, {lzy, default => sub {
-        my %encode = ( q{&} => q{&amp;}, q{"} => q{&quot;}, q{'} => q{&apos;}, q{<} => q{&lt;}, q{>} => q{&gt;} );
-        $encode{regex} = join "|", keys %encode;
-        return \%encode;
-    }}]
 );
 
 validate_subs(
@@ -78,17 +73,14 @@ sub _generate_meta_tag {
 }
 
 sub _build_field {
-    my $content = $_[0]->{ $_[1]->{field} };
-    my $encode = $_[0]->encoding; # lazy build  once and not for each field
-    $content =~ s/($encode->{regex})/$encode->{$1}/g;
-    return sprintf q{<meta %s="%s:%s" content="%s"/>}, $_[0]->meta_attribute,
+	return sprintf q{<meta %s="%s:%s" content="%s"/>}, $_[0]->meta_attribute,
       ( $_[1]->{ignore_meta_namespace} // $_[0]->meta_namespace ),
       ( defined $_[1]->{field_type} ? $_[1]->{field_type} : $_[1]->{field} ),
-      $content;
+      $_[0]->{$_[1]->{field}};
 }
 
 sub _convert_field {
-    $_[1] =~ tr/_/:/;
+    $_[1] =~ s/_/:/g;
     return $_[0]->provider_convert( $_[1] );
 }
 

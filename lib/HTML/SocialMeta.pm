@@ -7,20 +7,29 @@ use HTML::SocialMeta::OpenGraph;
 
 use MooX::LazierAttributes qw/lzy bld/;
 use MooX::ValidateSubs;
-use Types::Standard qw/Str Object ArrayRef/;
+use Types::Standard qw/Str Object ArrayRef Split/;
 
 our $VERSION = '0.72';
 
+our %encode;
+BEGIN {
+        %encode = ( q{&} => q{&amp;}, q{"} => q{&quot;}, q{'} => q{&apos;}, q{<} => q{&lt;}, q{>} => q{&gt;} );
+        $encode{regex} = join "|", keys %encode;
+}
+
 attributes(
     [qw(card_type card site site_name title description image image_alt url creator operatingSystem
-    app_country app_name app_id app_url player player_height player_width fb_app_id)] => [ Str, {lzy} ],
+    app_country app_name app_id app_url player player_height player_width fb_app_id)] => [ Str, {lzy, coerce => sub { 
+        $_[0] =~ s/($encode{regex})/$encode{$1}/g;
+		$_[0]; 
+	}} ],
     [qw(twitter opengraph)] => [ Object, { lzy, bld } ],
     social => [ sub { [qw/twitter opengraph/] } ],
 );
 
 validate_subs(
     create => {
-        params => [ [ Str, 'card_type' ], [ ArrayRef, 'social' ] ],
+        params => [ [ Str, 'card_type' ], [ (ArrayRef[Str])->plus_coercions(Split[qr/\s/]), 'social' ] ], # I expect this to be an arrayref
     },
     required_fields => {
         params => [ [ Str, 'card_type' ], [ ArrayRef, 'social' ] ],
@@ -28,7 +37,7 @@ validate_subs(
 );
 
 sub create {
-    return join "\n", map { $_[0]->$_->create( $_[1] ) } ref $_[2] eq 'ARRAY' ? @{ $_[2] } : $_[2];
+    return join "\n", map { $_[0]->$_->create( $_[1] ) } ref $_[2] eq 'ARRAY' ? @{ $_[2] } : $_[2]; # it doesn't coerce my value
 }
 
 sub required_fields {

@@ -182,7 +182,7 @@ my $ios_test_tags = q(<meta name="twitter:card" content="app"/>
 
 is($ios_app_tags->create('app'), $ios_test_tags);
 
-my $create_twitter_featured = $meta_tags->create('featured_image', ['twitter']);
+my $create_twitter_featured = $meta_tags->create('featured_image', 'twitter');
 
 my $test_featured_twitter = '<meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@example_twitter"/>
