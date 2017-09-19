@@ -32,7 +32,7 @@ validate_subs(
         params => [ [ Str, 'card_type' ], [ (ArrayRef[Str])->plus_coercions(Split[qr/\s/]), 'social' ] ], # I expect this to be an arrayref
     },
     required_fields => {
-        params => [ [ Str, 'card_type' ], [ ArrayRef, 'social' ] ],
+        params => [ [ Str, 'card_type' ], [ (ArrayRef[Str])->plus_coercions(Split[qr/\s/]), 'social' ] ],
     },
 );
 
