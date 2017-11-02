@@ -100,13 +100,13 @@ Version 0.73
         description => '',
         image	=> '',
         fb_app_id => '',
-	    url  => '',  # optional
+	    url  => '',
         ... => '',
         ... => '',
     );
 
-    # returns meta tags for all providers	
-    # additional options 'featured_image',  'app', 'player'   
+    # returns meta tags for all providers
+    # additional options 'featured_image',  'app', 'player'
     my $meta_tags = $social->create('summary');
 
     # returns meta tags specificly for a single provider
@@ -202,7 +202,7 @@ OPTIONAL - A text description of the image, for use by vision-impaired users
 
 =item url
 
-OPTIONAL OPENGRAPH - allows you to specify an alternative url link you want the reader to be redirected
+Required for OpenGraph. Allows you to specify an alternative url link you want the reader to be redirected
 
 =item player
 
