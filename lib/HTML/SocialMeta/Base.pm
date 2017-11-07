@@ -12,7 +12,7 @@ attributes(
     [qw(card_type card type name url)] => [ rw, HTML->by('encode_entity'), {lzy} ],
     [qw(site fb_app_id site_name title description image creator operatingSystem app_country
     app_name app_id app_url player player_height player_width)] => [HTML->by('encode_entity')],
-    [qw(image_alt)] => [ Str, {lzy} ],
+    [qw(image_alt)] => [ Str, {lzy => 1, default => ''} ],
     [qw(card_options build_fields)] => [HashRef,{default => sub { {} }}],
     [qw(meta_attribute meta_namespace)] => [ro],
 );
