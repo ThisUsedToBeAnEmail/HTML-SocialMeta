@@ -12,8 +12,8 @@ attributes(
     [qw(card_type card type name url)] => [ rw, HTML->by('encode_entity'), {lzy, coe} ],
     [qw(site fb_app_id site_name title description image creator operatingSystem app_country
     app_name app_id app_url player player_height player_width)] => [HTML->by('encode_entity'), {coe}],
-	'image_alt' => [HTML->by('encode_entity'), {coe, lzy_str}],
-	[qw(card_options build_fields)] => [HashRef,{dhash}],
+    'image_alt' => [HTML->by('encode_entity'), {coe, lzy_str}],
+    [qw(card_options build_fields)] => [HashRef,{dhash}],
     [qw(meta_attribute meta_namespace)] => [ro],
 );
 
@@ -54,12 +54,12 @@ sub required_fields {
 
 sub meta_option {
     my $option = $_[0]->card_options->{$_[1]};
-	$option =~ s{^create_}{}xms;
-	return $option;
+    $option =~ s{^create_}{}xms;
+    return $option;
 }
 
 sub _validate_field_value {
-	my $lame = $_[1]; # instantiate a default
+    my $lame = $_[1]; # instantiate a default
     defined $_[0]->$lame and return 1;
     croak sprintf q{you have not set this field value %s}, $lame;
 }
@@ -75,7 +75,7 @@ sub _generate_meta_tag {
 }
 
 sub _build_field {
-	return sprintf q{<meta %s="%s:%s" content="%s"/>}, $_[0]->meta_attribute,
+    return sprintf q{<meta %s="%s:%s" content="%s"/>}, $_[0]->meta_attribute,
       ( $_[1]->{ignore_meta_namespace} // $_[0]->meta_namespace ),
       ( defined $_[1]->{field_type} ? $_[1]->{field_type} : $_[1]->{field} ),
       $_[0]->{$_[1]->{field}};
