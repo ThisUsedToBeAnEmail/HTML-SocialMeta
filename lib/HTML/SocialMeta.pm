@@ -9,7 +9,7 @@ use MooX::LazierAttributes qw/lzy bld coe/;
 use MooX::ValidateSubs;
 use Coerce::Types::Standard qw/HTML Str Object StrToArray/;
 
-our $VERSION = '0.730003';
+our $VERSION = '0.74';
 
 our %encode;
 BEGIN {
@@ -44,7 +44,12 @@ sub required_fields {
 }
 
 sub _build_twitter {
-    HTML::SocialMeta::Twitter->new(
+	my %args =  map {  defined $_[0]->$_ ? ( $_ => $_[0]->$_ ) : () }
+              qw/card_type site title description image image_alt url creator
+              operatingSystem app_country app_name app_id app_url
+              player player_width player_height/;
+	
+	HTML::SocialMeta::Twitter->new(
         (
             map { defined $_[0]->$_ ? ( $_ => $_[0]->$_ ) : () }
               qw/card_type site title description image image_alt url creator
@@ -84,7 +89,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.730003
+Version 0.74
 
 =head1 SYNOPSIS
 

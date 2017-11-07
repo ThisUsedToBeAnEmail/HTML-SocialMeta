@@ -2,18 +2,18 @@ package HTML::SocialMeta::Base;
 use Moo;
 use Carp;
 
-our $VERSION = '0.730003';
+our $VERSION = '0.74';
 
-use MooX::LazierAttributes qw/rw ro lzy/;
+use MooX::LazierAttributes qw/rw ro lzy dhash lzy_str coe/;
 use MooX::ValidateSubs;
 use Coerce::Types::Standard qw/Str HashRef HTML/;
 
 attributes(
-    [qw(card_type card type name url)] => [ rw, HTML->by('encode_entity'), {lzy} ],
+    [qw(card_type card type name url)] => [ rw, HTML->by('encode_entity'), {lzy, coe} ],
     [qw(site fb_app_id site_name title description image creator operatingSystem app_country
-    app_name app_id app_url player player_height player_width)] => [HTML->by('encode_entity')],
-    [qw(image_alt)] => [ Str, {lzy => 1, default => ''} ],
-    [qw(card_options build_fields)] => [HashRef,{default => sub { {} }}],
+    app_name app_id app_url player player_height player_width)] => [HTML->by('encode_entity'), {coe}],
+	'image_alt' => [HTML->by('encode_entity'), {coe, lzy_str}],
+	[qw(card_options build_fields)] => [HashRef,{dhash}],
     [qw(meta_attribute meta_namespace)] => [ro],
 );
 
@@ -59,8 +59,9 @@ sub meta_option {
 }
 
 sub _validate_field_value {
-    defined $_[0]->{ $_[1] } and return 1;
-    croak sprintf q{you have not set this field value %s}, $_[1];
+	my $lame = $_[1]; # instantiate a default
+    defined $_[0]->$lame and return 1;
+    croak sprintf q{you have not set this field value %s}, $lame;
 }
 
 sub _generate_meta_tag {
@@ -114,7 +115,7 @@ builds and returns the Meta Tags
 
 =head1 VERSION
 
-Version 0.730003
+Version 0.74
 
 =cut
 

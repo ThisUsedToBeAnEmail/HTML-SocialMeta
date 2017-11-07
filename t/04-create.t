@@ -4,7 +4,6 @@ use warnings;
 use Test::More;
   
 use_ok( 'HTML::SocialMeta' );
-
 # Build Some Test Data Which Is Valid
 my $meta_tags = HTML::SocialMeta->new(
     card_type => 'summary',
