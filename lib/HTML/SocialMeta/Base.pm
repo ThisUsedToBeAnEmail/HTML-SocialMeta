@@ -2,7 +2,7 @@ package HTML::SocialMeta::Base;
 use Moo;
 use Carp;
 
-our $VERSION = '0.74';
+our $VERSION = '0.740001';
 
 use MooX::LazierAttributes qw/rw ro lzy dhash lzy_str coe/;
 use MooX::ValidateSubs;
@@ -82,7 +82,7 @@ sub _build_field {
 }
 
 sub _convert_field {
-    (my $field = $_[1]) =~ s/_/:/g;
+    (my $field = $_[1]) =~ s/\_/\:/g;
     return $_[0]->provider_convert( $field );
 }
 
@@ -115,7 +115,7 @@ builds and returns the Meta Tags
 
 =head1 VERSION
 
-Version 0.74
+Version 0.740001
 
 =cut
 

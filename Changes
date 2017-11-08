@@ -22,3 +22,6 @@ SUN Mar 22 13:15:09 CET 2016 - thisusedtobeanemail@gmail.com
     Thanks Jason McIntosh (JMAC) for
 	- Making image_alt optional again
     - Updating the docs to clarify that the "url" attribute is required
+
+0.74001 08/11/2017
+	- Escape special characters in search and replace s/\_/\:/ - perl 5.8.*
