@@ -32,7 +32,8 @@ WriteMakefile(
         'meta-spec' => { version => 2 },
         x_contributors => [
             'Robert Haliday <robh@cpan.org>',
-            'Jason McIntosh (JMAC) <jmac@jmac.org>'
+            'Jason McIntosh (JMAC) <jmac@jmac.org>',
+            'Mohammad S Anwar (MANWAR) <mohammad.anwar@yahoo.com>'
         ],
         resources => {
             repository => {

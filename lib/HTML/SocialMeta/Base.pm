@@ -2,11 +2,11 @@ package HTML::SocialMeta::Base;
 use Moo;
 use Carp;
 
-our $VERSION = '0.740001';
+our $VERSION = '0.74004';
 
 use MooX::LazierAttributes qw/rw ro lzy dhash lzy_str coe/;
 use MooX::ValidateSubs;
-use Coerce::Types::Standard qw/Str HashRef HTML/;
+use Coerce::Types::Standard qw/Str HashRef HTML StrSR/;
 
 attributes(
     [qw(card_type card type name url)] => [ rw, HTML->by('encode_entity'), {lzy, coe} ],
@@ -24,7 +24,7 @@ validate_subs(
     meta_option        => { params => [ [Str] ] },
     _generate_meta_tag => { params => [ [Str] ] },
     _build_field       => { params => [ [HashRef] ] },
-    _convert_field     => { params => [ [Str] ] },
+    _convert_field     => { params => [ [StrSR->by(['_',':'])] ] },
     _no_card_type      => { params => [ [Str] ] }
 );
 
@@ -76,14 +76,13 @@ sub _generate_meta_tag {
 
 sub _build_field {
     return sprintf q{<meta %s="%s:%s" content="%s"/>}, $_[0]->meta_attribute,
-      ( $_[1]->{ignore_meta_namespace} // $_[0]->meta_namespace ),
+      ( $_[1]->{ignore_meta_namespace} || $_[0]->meta_namespace ),
       ( defined $_[1]->{field_type} ? $_[1]->{field_type} : $_[1]->{field} ),
       $_[0]->{$_[1]->{field}};
 }
 
 sub _convert_field {
-    (my $field = $_[1]) =~ s/\_/\:/g;
-    return $_[0]->provider_convert( $field );
+    return $_[0]->provider_convert( $_[1] );
 }
 
 sub _no_card_type {
@@ -115,7 +114,7 @@ builds and returns the Meta Tags
 
 =head1 VERSION
 
-Version 0.740001
+Version 0.74004
 
 =cut
 
@@ -204,7 +203,7 @@ List::MoreUtils - Version 0.413
 
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2017 Robert Acock.
+Copyright 2017, 2019 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a

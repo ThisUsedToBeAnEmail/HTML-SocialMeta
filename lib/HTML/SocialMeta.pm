@@ -9,7 +9,7 @@ use MooX::LazierAttributes qw/lzy bld coe/;
 use MooX::ValidateSubs;
 use Coerce::Types::Standard qw/HTML Str Object StrToArray/;
 
-our $VERSION = '0.740001';
+our $VERSION = '0.74004';
 
 our %encode;
 BEGIN {
@@ -89,7 +89,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.740001
+Version 0.74004
 
 =head1 SYNOPSIS
 
@@ -459,6 +459,7 @@ meta data Google is able to extract from each page.
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 Robert Haliday <robh@cpan.org>
 Jason McIntosh (JMAC) <jmac@jmac.org>
+Mohammad S Anwar (MANWAR) <mohammad.anwar@yahoo.com>
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
@@ -466,7 +467,7 @@ Jason McIntosh (JMAC) <jmac@jmac.org>
 
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2017 Robert Acock.
+Copyright 2017, 2019 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a

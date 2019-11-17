@@ -2,7 +2,7 @@ package HTML::SocialMeta::OpenGraph;
 use Moo;
 use Carp;
 
-our $VERSION = '0.740001';
+our $VERSION = '0.74004';
 
 extends 'HTML::SocialMeta::Base';
 
@@ -102,7 +102,7 @@ HTML::SocialMeta::OpenGraph
 
 =head1 VERSION
 
-Version 0.740001
+Version 0.74004
 
 =cut
 
@@ -198,7 +198,7 @@ Most probably. Please report any bugs at http://rt.cpan.org/.
 
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2017 Robert Acock.
+Copyright 2017, 2019 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
